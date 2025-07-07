@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="card">
+        <div class="search">
+            <input type="text" placeholder="Enter city name" spellcheck="false">
+            <button><img src="search-icon-png-5.png"></button>
+        </div>
+        <div class="error">
+            Invalid city name
+        </div>
+        <div class="weather">
+            <img src="3d-weather-icon-day-with-rain-free-png.webp" class="weather-icon">
+            <h1 class="temp">22<sup>o</sup>C</h1>
+            <h2 class="city">New York</h2>
+            <p class="feel">Feels like <span class="feel1"></span></p>
+            <div class="details">
+                <div class="col">
+                    <img src="humidity.webp" class="weather-icon1">
+                    <div class="text">
+                        <p class="humid">50%</p>
+                        <p>Humidity</p>
+                    </div>
+                </div>
+                <div class="col">
+                    <img src="windy-3d-icon-download-in-png-blend-fbx-gltf-file-formats--wind-air-storm-weather-pack-nature-icons-6044096.webp" class="weather-icon2">
+                    <div class="text">
+                        <p class="wind">18 km/h</p>
+                        <p>Wind speed</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        const apikey="32f240e7dbf987239fa93ae66c6225c3";
+        const apiurl="https://api.openweathermap.org/data/2.5/weather?units=metric&q=";
+        let temp=document.querySelector(".temp");
+        let city1=document.querySelector(".city");
+        let humid=document.querySelector(".humid");
+        let wind=document.querySelector(".wind");
+        let image=document.querySelector(".weather-icon");
+        async function weather(city){
+            let response=await fetch(apiurl+city+'&appid=32f240e7dbf987239fa93ae66c6225c3');
+            var data=await response.json();
+            console.log(data);
+            if(response.status == 404){
+                document.querySelector(".error").style.display="block";
+                document.querySelector(".weather").style.display="none";
+            }   
+            else{
+            temp.innerHTML=Math.round(data.main.temp)+"°C";
+            city1.innerHTML=data.name;
+            document.querySelector(".feel1").innerHTML=Math.round(data.main.feels_like)+"°C";
+            humid.innerHTML=data.main.humidity+"%";
+            wind.innerHTML=data.wind.speed+"Km/Hr";
+
+            if(data.weather[0].main ==="Clouds"){
+                image.src="3d-weather-icon-day-with-rain-free-png.webp";
+            }
+            else if(data.weather[0].main =="Clear"){
+                image.src="clear_sky.webp";
+            }
+            else if(data.weather[0].main =="Rain"){
+                image.src="rain.webp";
+            }
+            else if(data.weather[0].main =="Drizzle"){
+                image.src="drizzle.webp";
+            }
+            else if(data.weather[0].main =="Mist"){
+                image.src="mist.webp";
+            }   
+            document.querySelector(".weather").style.display="block";
+            document.querySelector(".error").style.display="none";
+        } 
+        }
+        document.querySelector(".search button").addEventListener("click",()=>{
+            weather(document.querySelector(".search input").value);
+        });
+    </script>
+</body>
+</html>
